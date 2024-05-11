@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: instavote
+  labels:
+    app: result
+  name: result
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: result
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: result
+    spec:
+      containers:
+      - image: cplk01/result:latest
+        name: result
+        ports:
+        - containerPort: 80

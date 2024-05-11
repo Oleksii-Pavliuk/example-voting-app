@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: instavote
+  labels:
+    app: result
+  name: result
+spec:
+  ports:
+  - name: "80"
+    nodePort: 30100
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: result
+  type: NodePort
