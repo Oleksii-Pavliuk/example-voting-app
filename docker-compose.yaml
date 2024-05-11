@@ -1,0 +1,58 @@
+services:
+
+  redis:
+    platform: linux
+    image: redis:6.0-alpine
+    networks:
+      - vote
+
+  db:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    networks:
+      - vote
+  vote:
+    image: vote
+    container_name: vote
+    build:
+      context: ./vote
+      dockerfile: Dockerfile
+    ports:
+      - 80
+    depends_on:
+      - redis
+    networks:
+      - vote
+
+  result:
+    image: result
+    container_name: result
+    build:
+      context: ./result
+      dockerfile: Dockerfile
+    ports:
+      - 80
+    networks:
+      - vote
+    depends_on:
+      - redis
+
+  worker:
+    image: worker
+    container_name: worker
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    networks:
+      - vote
+    depends_on:
+      - redis
+      - db
+
+
+
+
+networks:
+  vote:
+    driver: bridge
